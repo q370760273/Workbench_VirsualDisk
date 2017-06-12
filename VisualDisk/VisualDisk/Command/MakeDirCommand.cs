@@ -10,7 +10,7 @@ namespace VisualDisk
     public class MakeDirCommand : Command
     {
         private string _path;
-        private Component _dirIndex;
+        private Component _targetTemp;
         Regex nameRegex = new Regex("[/?*:\"<>|]");
         Regex fullSpaceNameRegex = new Regex(@"\\[\s]+\\");
         public MakeDirCommand(string path)
@@ -22,20 +22,18 @@ namespace VisualDisk
         {
             if (_path == "")
             {
-                Console.WriteLine("命令语法不正确。");
-                return;
-            }
-            if (fullSpaceNameRegex.IsMatch(_path))
-            {
-                Console.WriteLine("文件名、目录名或券标语法不正确。");
+                Logger.Log(Status.Error_Command);
                 return;
             }
 
             _path = _path.Replace("\"", "");
             string[] paths = new Regex(@"[\\]+").Split(_path);
-
-            if (!CheckRoot(paths[0]))
+            Status status = CheckRoot(_path, paths[0], out _targetTemp);
+            if (status != Status.Succeed)
+            {
+                Logger.Log(status);
                 return;
+            }
 
             for (int i = 1; i < paths.Length; i++)
             {
@@ -49,78 +47,27 @@ namespace VisualDisk
                 }
                 else if (paths[i] == "..")
                 {
-                    if (_dirIndex.parent != null)
-                        _dirIndex = _dirIndex.parent;
+                    if (_targetTemp.parent != null)
+                        _targetTemp = _targetTemp.parent;
 
                     continue;
                 }
 
-                CreateDirectory(paths[i]);
+                _targetTemp = EnterDirectory(_targetTemp, paths[i]);
             }
         }
 
-        private bool CheckRoot(string rootName)
+        protected override Component EnterDirectory(Component source, string name)
         {
-            if (rootName == "")
+            Component child = source.GetChild(name);
+
+            if (child == null)
             {
-                _dirIndex = VsDiskMoniter.Instance.Root;
-            }
-            else if (rootName == ".")
-            {
-                _dirIndex = VsDiskMoniter.Instance.Cursor;
-            }
-            else if (rootName == "..")
-            {
-                if (VsDiskMoniter.Instance.Cursor.parent != null)
-                    _dirIndex = VsDiskMoniter.Instance.Cursor.parent;
-                else
-                    _dirIndex = VsDiskMoniter.Instance.Cursor;
-            }
-            else if (rootName.Last() == ':')
-            {
-                if (rootName.ToLower() != "v:")
-                {
-                    Console.WriteLine("系统找不到指定的驱动器。");
-                    return false;
-                }
-                else
-                {
-                    _dirIndex = VsDiskMoniter.Instance.Root;
-                }
-            }
-            else
-            {
-                _dirIndex = VsDiskMoniter.Instance.Cursor;
-                if (nameRegex.IsMatch(rootName))
-                {
-                    Console.WriteLine("文件名、目录名或券标语法不正确。");
-                    return false;
-                }
-                CreateDirectory(rootName);
+                child = new VsDirectory(name);
+                source.Add(child);
             }
 
-            if (nameRegex.IsMatch(_path.Substring(rootName.Length)))
-            {
-                Console.WriteLine("文件名、目录名或券标语法不正确。");
-                return false;
-            }
-
-            return true;
-        }
-
-        private void CreateDirectory(string name)
-        {
-            Component child;
-            if ((child = _dirIndex.GetChild(name)) != null)
-            {
-                _dirIndex = child;
-            }
-            else
-            {
-                Component dir = new VsDirectory(name);
-                _dirIndex.Add(dir);
-                _dirIndex = dir;
-            }
+            return child;
         }
     }
 }

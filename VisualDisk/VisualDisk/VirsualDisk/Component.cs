@@ -11,10 +11,12 @@ namespace VisualDisk
         protected string _name;
         protected Component _parent;
         protected List<Component> _childs = new List<Component>();
+        protected DateTime _changeTime;
 
         public Component(string name)
         {
             _name = name;
+            RefreshTime();
         }
 
         public virtual void Dispose()
@@ -33,6 +35,21 @@ namespace VisualDisk
             throw new NotImplementedException();
         }
 
+        public virtual void Remove(Component child)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual bool IsDirectory()
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual string GetName()
+        {
+            return _name;
+        }
+
         public virtual string GetPath()
         {
             StringBuilder sb = new StringBuilder(_name);
@@ -43,6 +60,11 @@ namespace VisualDisk
                 p = p._parent;
             }
             return sb.ToString();
+        }
+
+        public string GetChangeTime()
+        {
+            return _changeTime.ToString("yyyy/MM/dd  HH:mm");
         }
 
         public Component GetChild(string name)
@@ -58,6 +80,11 @@ namespace VisualDisk
         public void SetParent(Component parent)
         {
             _parent = parent;
+        }
+
+        public void RefreshTime()
+        {
+            _changeTime = DateTime.Now;
         }
 
         public string name

@@ -8,7 +8,7 @@ namespace VisualDisk
 {
     public class CommandParser
     {
-        public Command _cmd;
+        public ICommand _cmd;
         public void Parse(string cmdInfo)
         {
             cmdInfo = cmdInfo.Trim();

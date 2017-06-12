@@ -28,6 +28,16 @@ namespace VisualDisk
             Dispose();
         }
 
+        public override bool IsDirectory()
+        {
+            return false;
+        }
+
+        public override string GetName()
+        {
+            return _name + "." + _exName;
+        }
+
         public override string GetPath()
         {
             return base.GetPath() + "." + _exName;

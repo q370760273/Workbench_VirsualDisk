@@ -7,3 +7,12 @@ D:\VS Workbench\VisualDisk\VisualDisk\obj\Debug\Interop.IISOle.dll
 D:\VS Workbench\VisualDisk\VisualDisk\obj\Debug\VisualDisk.csproj.ResolveComReference.cache
 D:\VS Workbench\VisualDisk\VisualDisk\obj\Debug\VisualDisk.exe
 D:\VS Workbench\VisualDisk\VisualDisk\obj\Debug\VisualDisk.pdb
+D:\VS Workbench\Workbench_VirsualDisk\VisualDisk\VisualDisk\bin\Debug\VisualDisk.exe.config
+D:\VS Workbench\Workbench_VirsualDisk\VisualDisk\VisualDisk\obj\Debug\Interop.IISOle.dll
+D:\VS Workbench\Workbench_VirsualDisk\VisualDisk\VisualDisk\obj\Debug\VisualDisk.csproj.ResolveComReference.cache
+D:\VS Workbench\Workbench_VirsualDisk\VisualDisk\VisualDisk\obj\Debug\VisualDisk.exe
+D:\VS Workbench\Workbench_VirsualDisk\VisualDisk\VisualDisk\obj\Debug\VisualDisk.pdb
+D:\VS Workbench\Workbench_VirsualDisk\VisualDisk\VisualDisk\bin\Debug\VisualDisk.exe
+D:\VS Workbench\Workbench_VirsualDisk\VisualDisk\VisualDisk\bin\Debug\VisualDisk.pdb
+D:\VS Workbench\Workbench_VirsualDisk\VisualDisk\VisualDisk\bin\Debug\Interop.IISOle.dll
+D:\VS Workbench\Workbench_VirsualDisk\VisualDisk\VisualDisk\obj\Debug\VisualDisk.csprojResolveAssemblyReference.cache

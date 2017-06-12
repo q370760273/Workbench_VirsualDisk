@@ -24,9 +24,14 @@ namespace VisualDisk
 
             _path = _path.Replace("\"", "");
             string[] paths = new Regex(@"[\\]+").Split(_path);
+            Status status = CheckRoot(_path, paths[0], out _target);
+            if (status != Status.Succeed)
+            {
+                if(status != Status.Error_Path)
+                    Logger.Log(status);
 
-            if (!CheckRoot(paths[0]))
                 return;
+            }
 
             for (int i = 1; i < paths.Length; i++)
             {
@@ -46,68 +51,14 @@ namespace VisualDisk
                     continue;
                 }
 
-                if (!EnterDirectory(paths[i]))
+                _target = EnterDirectory(_target, paths[i]);
+                if (_target == null)
                     return;
             }
 
             if (_target != null)
             {
                 VsDiskMoniter.Instance.ResetCursor(_target);
-            }
-        }
-
-        public bool CheckRoot(string rootName)
-        {
-            if (rootName == "")
-            {
-                _target = VsDiskMoniter.Instance.Root;
-            }
-            else if (rootName == ".")
-            {
-                _target = VsDiskMoniter.Instance.Cursor;
-            }
-            else if (rootName == "..")
-            {
-                if (VsDiskMoniter.Instance.Cursor.parent != null)
-                    _target = VsDiskMoniter.Instance.Cursor.parent;
-                else
-                    _target = VsDiskMoniter.Instance.Cursor;
-            }
-            else if (rootName.Last() == ':')
-            {
-                if (rootName.ToLower() != "v:")
-                {
-                    Console.WriteLine("系统找不到指定的驱动器。");
-                    return false;
-                }
-                else
-                {
-                    _target = VsDiskMoniter.Instance.Root;
-                }
-            }
-            else
-            {
-                _target = VsDiskMoniter.Instance.Cursor;
-
-                if (!EnterDirectory(rootName))
-                    return false;
-            }
-
-            return true;
-        }
-
-        public bool EnterDirectory(string name)
-        {
-            Component child;
-            if ((child = _target.GetChild(name)) != null)
-            {
-                _target = child;
-                return true;
-            }
-            else
-            {
-                _target = null;
-                return false;
             }
         }
     }

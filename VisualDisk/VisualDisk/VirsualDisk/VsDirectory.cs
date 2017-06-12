@@ -21,12 +21,21 @@ namespace VisualDisk
         {
             child.SetParent(this);
             _childs.Add(child);
+            RefreshTime();
+        }
+
+        public override void Remove(Component child)
+        {
+            if (_childs.Remove(child))
+            {
+                RefreshTime();
+            }
         }
 
         public override void Remove()
         {
             if (_parent != null)
-                _parent.childs.Remove(this);
+                _parent.Remove(this);
 
             foreach (Component child in _childs)
             {
@@ -34,6 +43,11 @@ namespace VisualDisk
             }
             
             Dispose();
+        }
+
+        public override bool IsDirectory()
+        {
+            return true;
         }
     }
 }
