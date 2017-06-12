@@ -22,7 +22,7 @@ namespace VisualDisk
         {
             if (_path == "")
             {
-                Logger.Log(Status.Error_Command);
+                Logger.Log(Status.Error_Commond_Format);
                 return;
             }
 

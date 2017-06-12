@@ -27,7 +27,7 @@ namespace VisualDisk
             Status status = CheckRoot(_path, paths[0], out _target);
             if (status != Status.Succeed)
             {
-                if(status != Status.Error_Path)
+                if(status != Status.Error_Path_Not_Found)
                     Logger.Log(status);
 
                 return;

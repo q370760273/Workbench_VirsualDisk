@@ -58,7 +58,7 @@ namespace VisualDisk
                     _target = EnterDirectory(_target, paths[i]);
                     if (_target == null)
                     {
-                        Logger.Log(Status.Error_Path);
+                        Logger.Log(Status.Error_Path_Not_Found);
                         return;
                     }
                 }

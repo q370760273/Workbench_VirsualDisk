@@ -8,6 +8,11 @@ namespace VisualDisk
 {
     public class CopyCommand : Command
     {
+        public CopyCommand(string sourcePath, string destPath)
+        {
+
+        }
+
         public override void Excute()
         {
             throw new NotImplementedException();

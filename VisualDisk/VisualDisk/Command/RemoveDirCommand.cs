@@ -21,7 +21,7 @@ namespace VisualDisk
         {
             if (_path == "")
             {
-                Logger.Log(Status.Error_Command);
+                Logger.Log(Status.Error_Commond_Format);
                 return;
             }
 
@@ -55,7 +55,7 @@ namespace VisualDisk
                 _tempTarget = EnterDirectory(_tempTarget, paths[i]);
                 if (_tempTarget == null)
                 {
-                    Logger.Log(Status.Error_Path);
+                    Logger.Log(Status.Error_Path_Not_Found);
                     return;
                 }
             }

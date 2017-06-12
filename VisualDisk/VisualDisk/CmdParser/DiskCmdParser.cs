@@ -42,6 +42,12 @@ namespace VisualDisk
                 string newDir = new Regex("[d|D][i|I][r|R]([\\s]+|(?=[.]|[..]|$|\\\\))").Replace(cmdInfo, "");
                 _cmd = new DirCommand(newDir, formatAD, formatS);
             }
+            else if (cmdInfo.StartsWith("copy", StringComparison.CurrentCultureIgnoreCase))
+            {
+                string newDir = new Regex("[c|C][o|O][p|P][y|Y]([\\s]+|(?=[.]|[..]|$|\\\\))").Replace(cmdInfo, "");
+                string[] paths = new Regex(@"[\s]+").Split(newDir);
+                _cmd = new CopyCommand(paths[0], paths[1]);
+            }
             else
             {
                 int length = cmdInfo.IndexOf(" ");
@@ -49,7 +55,7 @@ namespace VisualDisk
                 {
                     length = cmdInfo.Length;
                 }
-                Console.WriteLine("'" + cmdInfo.Substring(0, length) + "' 不是内部或外面命令，也不是可运行的程序\n或批处理文件。");
+                Logger.Log(Status.Error_Commond, cmdInfo.Substring(0, length));
                 return false;
             }
 

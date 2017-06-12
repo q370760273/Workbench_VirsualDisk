@@ -22,10 +22,10 @@ namespace VisualDisk
             target = null;
 
             if (fullSpaceNameRegex.IsMatch(_path))
-                return Status.Error_Format;
+                return Status.Error_Path_Format;
 
             if (nameRegex.IsMatch(_path.Substring(rootName.Length)))
-                return Status.Error_Format;
+                return Status.Error_Path_Format;
 
 
             if (rootName == "")
@@ -46,19 +46,19 @@ namespace VisualDisk
             else if (rootName.Last() == ':')
             {
                 if (rootName.ToLower() != "v:")
-                    return Status.Error_DiskPath;
+                    return Status.Error_Disk_Not_Found;
 
                 target = VsDiskMoniter.Instance.Root;
             }
             else
             {
                 if (nameRegex.IsMatch(rootName))
-                    return Status.Error_Format;
+                    return Status.Error_Path_Format;
 
                 target = EnterDirectory(VsDiskMoniter.Instance.Cursor, rootName);
 
                 if (target == null)
-                    return Status.Error_Path;
+                    return Status.Error_Path_Not_Found;
             }
 
             return Status.Succeed;

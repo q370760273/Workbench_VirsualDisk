@@ -9,28 +9,32 @@ namespace VisualDisk
     public enum Status
     {
         Succeed,
-        Error_Command,
-        Error_Format,
-        Error_Path,
-        Error_DiskPath,
+        Error_Commond,
+        Error_Commond_Format,
+        Error_Path_Format,
+        Error_Path_Not_Found,
+        Error_Disk_Not_Found,
         Error_IO,
     }
     public class Logger
     {
-        public static void Log(Status status)
+        public static void Log(Status status, params string[] datas)
         {
             switch (status)
             {
-                case Status.Error_Command:
+                case Status.Error_Commond:
+                    Console.WriteLine("'{0}' 不是内部或外面命令，也不是可运行的程序\n或批处理文件。", datas[0]);
+                    break;
+                case Status.Error_Commond_Format:
                     Console.WriteLine("命令语法不正确。");
                     break;
-                case Status.Error_Format:
+                case Status.Error_Path_Format:
                     Console.WriteLine("文件名、目录名或券标语法不正确。");
                     break;
-                case Status.Error_Path:
+                case Status.Error_Path_Not_Found:
                     Console.WriteLine("系统找不到指定的路径。");
                     break;
-                case Status.Error_DiskPath:
+                case Status.Error_Disk_Not_Found:
                     Console.WriteLine("系统找不到指定的驱动器。");
                     break;
                 case Status.Error_IO:
