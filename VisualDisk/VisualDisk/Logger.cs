@@ -15,6 +15,7 @@ namespace VisualDisk
         Error_Path_Not_Found,
         Error_Disk_Not_Found,
         Error_IO,
+        Error_Write_Disable
     }
     public class Logger
     {
@@ -40,7 +41,23 @@ namespace VisualDisk
                 case Status.Error_IO:
                     Console.WriteLine("另一个程序正在使用此文件，进程无法访问。");
                     break;
+                case Status.Error_Write_Disable:
+                    Console.WriteLine("只允许向V盘写入数据。");
+                    break;
             }
+        }
+
+        public static bool ChooseDialog(ref string result, string content, params string[] datas)
+        {
+            if (!result.Equals("a", StringComparison.CurrentCultureIgnoreCase))
+            {
+                Console.Write(content + " (Yes/No/All):", datas);
+                result = Console.ReadLine();
+                if (!result.Equals("y", StringComparison.CurrentCultureIgnoreCase))
+                    return false;
+            }
+
+            return true;
         }
     }
 }

@@ -19,6 +19,7 @@ namespace VisualDisk
                 Console.Write(VsDiskMoniter.Instance.Cursor.GetPath() + ">");
                 string cmdInfo = Console.ReadLine().Trim();
                 _parser.Parse(cmdInfo);
+                Console.WriteLine();
             }
         }
     }

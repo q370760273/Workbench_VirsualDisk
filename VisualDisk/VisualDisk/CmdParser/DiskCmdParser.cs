@@ -46,7 +46,7 @@ namespace VisualDisk
             {
                 string newDir = new Regex("[c|C][o|O][p|P][y|Y]([\\s]+|(?=[.]|[..]|$|\\\\))").Replace(cmdInfo, "");
                 string[] paths = new Regex(@"[\s]+").Split(newDir);
-                _cmd = new CopyCommand(paths[0], paths[1]);
+                _cmd = new CopyCommand(paths);
             }
             else
             {

@@ -9,8 +9,8 @@ namespace VisualDisk
 {
     public class Command : ICommand
     {
-        Regex nameRegex = new Regex("[/?*:\"<>|]");
-        Regex fullSpaceNameRegex = new Regex(@"\\[\s]+\\");
+        protected Regex nameRegex = new Regex("[/?*:\"<>|]");
+        protected Regex fullSpaceNameRegex = new Regex(@"\\[\s]+\\");
 
         public virtual void Excute()
         {
@@ -66,7 +66,7 @@ namespace VisualDisk
 
         protected virtual Component EnterDirectory(Component source, string name)
         {
-            return source.GetChild(name);
+            return source.GetDirectory(name);
         }
     }
 }

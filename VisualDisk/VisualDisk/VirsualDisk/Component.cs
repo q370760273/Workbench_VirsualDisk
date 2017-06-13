@@ -50,9 +50,9 @@ namespace VisualDisk
             return _name;
         }
 
-        public virtual string GetPath()
+        public string GetPath()
         {
-            StringBuilder sb = new StringBuilder(_name);
+            StringBuilder sb = new StringBuilder(GetName());
             Component p = _parent;
             while (p != null)
             {
@@ -71,8 +71,34 @@ namespace VisualDisk
         {
             foreach (Component child in _childs)
             {
-                if (child.name.Equals(name, StringComparison.CurrentCultureIgnoreCase))
+                if (child.GetName().Equals(name, StringComparison.CurrentCultureIgnoreCase))
                     return child;
+            }
+            return null;
+        }
+
+        public VsDirectory GetDirectory(string name)
+        {
+            foreach (Component child in _childs)
+            {
+                if (!child.IsDirectory())
+                    continue;
+
+                if (child.GetName().Equals(name, StringComparison.CurrentCultureIgnoreCase))
+                    return child as VsDirectory;
+            }
+            return null;
+        }
+
+        public VsFile GetFile(string name, string exName)
+        {
+            foreach (Component child in _childs)
+            {
+                if (child.IsDirectory())
+                    continue;
+
+                if (child.GetName().Equals(name + "." + exName, StringComparison.CurrentCultureIgnoreCase))
+                    return child as VsFile;
             }
             return null;
         }

@@ -80,6 +80,7 @@ namespace VisualDisk
 
         public void ShowDirectoryInfos(Component target)
         {
+            Console.WriteLine();
             ShowDirectoryTitle(target);
 
             if (target.parent != null)
@@ -102,8 +103,6 @@ namespace VisualDisk
                     ShowFile(child);
                 }
             }
-
-            Console.WriteLine();
 
             if (_formatS)
             {

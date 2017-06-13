@@ -59,7 +59,7 @@ namespace VisualDisk
 
         protected override Component EnterDirectory(Component source, string name)
         {
-            Component child = source.GetChild(name);
+            Component child = source.GetDirectory(name);
 
             if (child == null)
             {
