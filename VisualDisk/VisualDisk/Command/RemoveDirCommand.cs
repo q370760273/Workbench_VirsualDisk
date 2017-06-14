@@ -11,8 +11,7 @@ namespace VisualDisk
     {
         private string _path;
         private Component _tempTarget;
-        Regex nameRegex = new Regex("[/?*:\"<>|]");
-        Regex fullSpaceNameRegex = new Regex(@"\\[\s]+\\");
+
         public RemoveDirCommand(string path)
         {
             _path = path;
@@ -25,39 +24,17 @@ namespace VisualDisk
                 return;
             }
 
-            _path = _path.Replace("\"", "");
-            string[] paths = new Regex(@"[\\]+").Split(_path);
-            Status status = CheckRoot(_path, paths[0], out _tempTarget);
+            string fileName;
+            Status status = CheckPath(_path, out _tempTarget, out fileName, false);
             if (status != Status.Succeed)
             {
                 Logger.Log(status);
                 return;
             }
-
-            for (int i = 1; i < paths.Length; i++)
+            else if (fileName != "*")
             {
-                if (paths[i] == "")
-                {
-                    continue;
-                }
-                else if (paths[i] == ".")
-                {
-                    continue;
-                }
-                else if (paths[i] == "..")
-                {
-                    if (_tempTarget.parent != null)
-                        _tempTarget = _tempTarget.parent;
-
-                    continue;
-                }
-
-                _tempTarget = EnterDirectory(_tempTarget, paths[i]);
-                if (_tempTarget == null)
-                {
-                    Logger.Log(Status.Error_Path_Not_Found);
-                    return;
-                }
+                Logger.Log(Status.Error_Path_Not_Found);
+                return;
             }
 
             if (_tempTarget != null)

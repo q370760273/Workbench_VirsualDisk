@@ -25,6 +25,45 @@ namespace VisualDisk
                 return;
             }
 
+            FileInfo[] sourceFileInfos = GetSourceInfo();
+
+            Component destDir;
+            string lastDestPath;
+            Status status = CheckPath(_paths[1], out destDir, out lastDestPath, true);
+            if (status != Status.Succeed)
+            {
+                Logger.Log(status);
+                return;
+            }
+
+            //处理最后一个
+
+            if (lastDestPath == "*") //复制到上一个目录下
+            {
+                CopyAll(sourceFileInfos, destDir);
+            }
+            else if (lastDestPath.StartsWith("*.")) //把复制的名字的后缀修改掉
+            {
+                if (nameRegex.IsMatch(lastDestPath.Substring(2)))
+                {
+                    Logger.Log(Status.Error_Path_Format);
+                    return;
+                }
+                CopyAllWithChangeExName(sourceFileInfos, destDir, lastDestPath);
+            }
+            else  //把复制的名字和后缀全改掉
+            {
+                if (nameRegex.IsMatch(lastDestPath))
+                {
+                    Logger.Log(Status.Error_Path_Format);
+                    return;
+                }
+                CopyWithChangeNameAndExName(sourceFileInfos, destDir, lastDestPath);
+            }
+        }
+
+        public FileInfo[] GetSourceInfo()
+        {
             string sourcePath = _paths[0].Replace("\"", "");
             string[] sourcePaths = new Regex(@"[\\]+").Split(sourcePath);
             sourcePaths[sourcePaths.Length - 1] = sourcePaths[sourcePaths.Length - 1].Replace("?", "*");
@@ -63,80 +102,13 @@ namespace VisualDisk
 
                 //拷贝整个目录
                 if (!Directory.Exists(builder.ToString()))
-                    return;
+                    return null;
 
                 DirectoryInfo dirInfo = Directory.CreateDirectory(builder.ToString());
                 sourceFileInfos = dirInfo.GetFiles(searchPattern);
             }
 
-
-
-            string destPath = _paths[1].Replace("\"", "");
-            string[] destPaths = new Regex(@"[\\]+").Split(destPath);
-            destPaths[destPaths.Length - 1] = destPaths[destPaths.Length - 1].Replace("?", "*");
-            Component destDir;
-            Status status = CheckDestRoot(destPath, destPaths, out destDir);
-            if (status != Status.Succeed)
-            {
-                Logger.Log(status);
-                return;
-            }
-
-            for (int i = 1; i < destPaths.Length - 1; i++)
-            {
-                if (destPaths[i] == "")
-                {
-                    continue;
-                }
-                else if (destPaths[i] == ".")
-                {
-                    continue;
-                }
-                else if (destPaths[i] == "..")
-                {
-                    if (destDir.parent != null)
-                        destDir = destDir.parent;
-
-                    continue;
-                }
-
-                destDir = EnterDirectory(destDir, destPaths[i]);
-                if (destDir == null)
-                {
-                    Logger.Log(Status.Error_Path_Not_Found);
-                    return;
-                }
-            }
-
-            //处理最后一个
-            string lastDestPath = destPaths[destPaths.Length - 1];
-
-            if (destDir.GetDirectory(lastDestPath) != null) //复制到一个目录下
-            {
-                CopyAll(sourceFileInfos, destDir.GetDirectory(lastDestPath));
-            }
-            else if (lastDestPath == "*") //复制到上一个目录下
-            {
-                CopyAll(sourceFileInfos, destDir);
-            }
-            else if (lastDestPath.StartsWith("*.")) //把复制的名字的后缀修改掉
-            {
-                if (nameRegex.IsMatch(lastDestPath.Substring(2)))
-                {
-                    Logger.Log(Status.Error_Path_Format);
-                    return;
-                }
-                CopyAllWithChangeExName(sourceFileInfos, destDir, lastDestPath);
-            }
-            else  //把复制的名字和后缀全改掉
-            {
-                if (nameRegex.IsMatch(lastDestPath))
-                {
-                    Logger.Log(Status.Error_Path_Format);
-                    return;
-                }
-                CopyWithChangeNameAndExName(sourceFileInfos, destDir, lastDestPath);
-            }
+            return sourceFileInfos;
         }
 
         public void CopyAll(FileInfo[] sourceFileInfos, Component targetDir)

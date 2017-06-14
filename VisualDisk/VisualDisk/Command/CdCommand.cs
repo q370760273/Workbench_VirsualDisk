@@ -22,38 +22,17 @@ namespace VisualDisk
             if (_path == "")
                 return;
 
-            _path = _path.Replace("\"", "");
-            string[] paths = new Regex(@"[\\]+").Split(_path);
-            Status status = CheckRoot(_path, paths[0], out _target);
+            string fileName;
+            Status status = CheckPath(_path, out _target, out fileName, false);
             if (status != Status.Succeed)
             {
-                if(status != Status.Error_Path_Not_Found)
-                    Logger.Log(status);
-
+                Logger.Log(status);
                 return;
             }
-
-            for (int i = 1; i < paths.Length; i++)
+            else if (fileName != "*")
             {
-                if (paths[i] == "")
-                {
-                    continue;
-                }
-                else if (paths[i] == ".")
-                {
-                    continue;
-                }
-                else if (paths[i] == "..")
-                {
-                    if (_target.parent != null)
-                        _target = _target.parent;
-
-                    continue;
-                }
-
-                _target = EnterDirectory(_target, paths[i]);
-                if (_target == null)
-                    return;
+                Logger.Log(Status.Error_Path_Not_Found);
+                return;
             }
 
             if (_target != null)

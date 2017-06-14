@@ -90,14 +90,14 @@ namespace VisualDisk
             return null;
         }
 
-        public VsFile GetFile(string name, string exName)
+        public VsFile GetFile(string nameAndExName)
         {
             foreach (Component child in _childs)
             {
                 if (child.IsDirectory())
                     continue;
 
-                if (child.GetName().Equals(name + "." + exName, StringComparison.CurrentCultureIgnoreCase))
+                if (child.GetName().Equals(nameAndExName, StringComparison.CurrentCultureIgnoreCase))
                     return child as VsFile;
             }
             return null;

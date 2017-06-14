@@ -26,40 +26,17 @@ namespace VisualDisk
                 return;
             }
 
-            _path = _path.Replace("\"", "");
-            string[] paths = new Regex(@"[\\]+").Split(_path);
-            Status status = CheckRoot(_path, paths[0], out _targetTemp);
+            string filename;
+            Status status = CheckPath(_path, out _targetTemp, out filename, false);
             if (status != Status.Succeed)
             {
                 Logger.Log(status);
-                return;
-            }
-
-            for (int i = 1; i < paths.Length; i++)
-            {
-                if (paths[i] == "")
-                {
-                    continue;
-                }
-                else if (paths[i] == ".")
-                {
-                    continue;
-                }
-                else if (paths[i] == "..")
-                {
-                    if (_targetTemp.parent != null)
-                        _targetTemp = _targetTemp.parent;
-
-                    continue;
-                }
-
-                _targetTemp = EnterDirectory(_targetTemp, paths[i]);
             }
         }
 
-        protected override Component EnterDirectory(Component source, string name)
+        protected override VsDirectory EnterDirectory(Component source, string name)
         {
-            Component child = source.GetDirectory(name);
+            VsDirectory child = source.GetDirectory(name);
 
             if (child == null)
             {
