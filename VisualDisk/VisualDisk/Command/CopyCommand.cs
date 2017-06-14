@@ -134,12 +134,10 @@ namespace VisualDisk
                             continue;
                     }
                 }
-                else
-                {
-                    file = new VsFile(fi.Name.Remove(fi.Name.Length - fi.Extension.Length, fi.Extension.Length), fi.Extension);
-                    (file as VsFile).Read(fi.FullName);
-                    targetDir.Add(file);
-                }
+
+                file = new VsFile(fi.Name.Remove(fi.Name.Length - fi.Extension.Length, fi.Extension.Length), fi.Extension);
+                (file as VsFile).Read(fi.FullName);
+                targetDir.Add(file);
             }
         }
 
@@ -147,6 +145,10 @@ namespace VisualDisk
         {
             string result = "";
             string exName = lastDestPath.Substring(1);
+
+            if (exName == ".")
+                exName = "";
+
             foreach (FileInfo fi in sourceFileInfos)
             {
                 Console.WriteLine(fi.FullName);
@@ -168,7 +170,11 @@ namespace VisualDisk
                     }
                 }
 
-                string newExName = name.Substring(name.LastIndexOf('.'), name.Length - name.LastIndexOf('.'));
+                string newExName = "";
+                if (name.LastIndexOf('.') != -1)
+                {
+                    newExName = name.Substring(name.LastIndexOf('.'), name.Length - name.LastIndexOf('.'));
+                }
                 string newName = name.Remove(name.Length - newExName.Length, newExName.Length);
                 file = new VsFile(newName, newExName);
                 (file as VsFile).Read(fi.FullName);
@@ -201,12 +207,14 @@ namespace VisualDisk
                         return;
                 }
             }
-            else
+            
+            file = new VsFile(name, exName);
+            foreach (FileInfo fi in sourceFileInfos)
             {
-                file = new VsFile(name, exName);
-                //(file as VsFile).Read(fi.FullName);
-                targetDir.Add(file);
+                Console.WriteLine(fi.FullName);
+                (file as VsFile).Read(fi.FullName);
             }
+            targetDir.Add(file);
 
         }
 

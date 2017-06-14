@@ -53,7 +53,9 @@ namespace VisualDisk
             {
                 Console.Write(content + " (Yes/No/All):", datas);
                 result = Console.ReadLine();
-                if (!result.Equals("y", StringComparison.CurrentCultureIgnoreCase))
+                if (result.Equals("y", StringComparison.CurrentCultureIgnoreCase) || result.Equals("a", StringComparison.CurrentCultureIgnoreCase))
+                    return true;
+                else
                     return false;
             }
 

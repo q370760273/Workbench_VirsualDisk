@@ -9,9 +9,9 @@ namespace VisualDisk
 {
     public class VsFile : Component
     {
-        private const int BUFFER_MAX_LEN = 65535;
+        //private const int BUFFER_MAX_LEN = 65535;
         private string _exName;
-        private byte[] buffers = new byte[BUFFER_MAX_LEN];
+        private byte[] buffers = new byte[0];
 
         public VsFile(string name, string exName) : base(name)
         {
@@ -27,7 +27,10 @@ namespace VisualDisk
         public void Read(string path)
         {
             FileStream fs = File.OpenRead(path);
-            fs.Read(buffers, 0, BUFFER_MAX_LEN);
+            var arr = new byte[buffers.Length + fs.Length];
+            Array.Copy(buffers, arr, buffers.Length);
+            fs.Read(arr, buffers.Length, (int)fs.Length);
+            buffers = arr;
             fs.Close();
         }
 
