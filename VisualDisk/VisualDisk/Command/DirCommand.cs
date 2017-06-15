@@ -57,7 +57,7 @@ namespace VisualDisk
                 else
                 {
                     Console.WriteLine(" " + _target.parent.GetPath() + " 的目录\n");
-                    Console.WriteLine(_target.GetChangeTime() + "                   " + _target.GetName());
+                    Console.WriteLine(_target.GetChangeTime() + (_target as VsFile).GetFileSizeString() + _target.GetName());
                 }
             }
         }
@@ -112,7 +112,7 @@ namespace VisualDisk
 
         public void ShowFile(Component file)
         {
-            Console.WriteLine(file.GetChangeTime() + "                   " + file.GetName());
+            Console.WriteLine(file.GetChangeTime() + (file as VsFile).GetFileSizeString() + file.GetName());
         }
     }
 }
