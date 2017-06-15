@@ -11,7 +11,7 @@ namespace VisualDisk
     {
         //private const int BUFFER_MAX_LEN = 65535;
         private string _exName;
-        private byte[] buffers = new byte[0];
+        private byte[] _buffer = new byte[0];
 
         public VsFile(string name, string exName) : base(name)
         {
@@ -27,10 +27,10 @@ namespace VisualDisk
         public void Read(string path)
         {
             FileStream fs = File.OpenRead(path);
-            var arr = new byte[buffers.Length + fs.Length];
-            Array.Copy(buffers, arr, buffers.Length);
-            fs.Read(arr, buffers.Length, (int)fs.Length);
-            buffers = arr;
+            var arr = new byte[_buffer.Length + fs.Length];
+            Array.Copy(_buffer, arr, _buffer.Length);
+            fs.Read(arr, _buffer.Length, (int)fs.Length);
+            _buffer = arr;
             fs.Close();
         }
 
@@ -56,5 +56,29 @@ namespace VisualDisk
         {
             return _name + _exName;
         }
+
+        public string GetFileSizeString()
+        {
+            return GetCommaNumber(_buffer.Length).PadLeft(18) + " ";
+        }
+
+        public static string GetCommaNumber(int number)
+        {
+            string numStr = number.ToString();
+            int temp3 = 0;
+            int endIndex = (number >= 0 ? 0 : 1);
+            for (int i = numStr.Length - 1; i > endIndex; i--)
+            {
+                if (++temp3 == 3)
+                {
+                    temp3 = 0;
+                    numStr = numStr.Insert(i, ",");
+                }
+            }
+            return numStr;
+        }
+
+        public byte[] Buffer
+        { get { return _buffer; } }
     }
 }

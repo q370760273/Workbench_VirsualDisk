@@ -55,6 +55,7 @@
     <Compile Include="Command\ICommand.cs" />
     <Compile Include="Command\MakeDirCommand.cs" />
     <Compile Include="Command\RemoveDirCommand.cs" />
+    <Compile Include="FileUtils.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

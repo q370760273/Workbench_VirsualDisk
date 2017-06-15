@@ -54,6 +54,12 @@ namespace VisualDisk
                 string[] paths = new Regex(@"[\s]+").Split(newDir);
                 _cmd = new DeleteFileCommand(paths);
             }
+            else if (cmdInfo.StartsWith("compare", StringComparison.CurrentCultureIgnoreCase))
+            {
+                string newDir = new Regex("[c|C][o|O][m|M][p|P][a|A][r|R][e|R]([\\s]+|(?=[.]|[..]|$|\\\\))").Replace(cmdInfo, "");
+                string[] paths = new Regex(@"[\s]+").Split(newDir);
+                _cmd = new CompareCommand(paths);
+            }
             else
             {
                 int length = cmdInfo.IndexOf(" ");
