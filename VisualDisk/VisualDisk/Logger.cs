@@ -11,11 +11,13 @@ namespace VisualDisk
         Succeed,
         Error_Commond,
         Error_Commond_Format,
+        Error_Attribute_Format,
         Error_Path_Format,
+        Error_Path_Already_Exist,
         Error_Path_Not_Found,
         Error_Disk_Not_Found,
         Error_IO,
-        Error_Write_Disable
+        Error_Write_Disable,
     }
     public class Logger
     {
@@ -29,8 +31,14 @@ namespace VisualDisk
                 case Status.Error_Commond_Format:
                     Console.WriteLine("命令语法不正确。");
                     break;
+                case Status.Error_Attribute_Format:
+                    Console.WriteLine("参数格式不正确 - "+ datas[0] + "。");
+                    break;
                 case Status.Error_Path_Format:
                     Console.WriteLine("文件名、目录名或券标语法不正确。");
+                    break;
+                case Status.Error_Path_Already_Exist:
+                    Console.WriteLine("子目录或文件 {0} 已经存在。", datas[0]);
                     break;
                 case Status.Error_Path_Not_Found:
                     Console.WriteLine("系统找不到指定的路径。");

@@ -10,9 +10,9 @@ namespace VisualDisk
 {
     public class CopyCommand : Command
     {
-        private string[] _paths;
+        private MString[] _paths;
 
-        public CopyCommand(string[] paths)
+        public CopyCommand(MString[] paths)
         {
             _paths = paths;
         }
@@ -28,8 +28,8 @@ namespace VisualDisk
             FileInfo[] sourceFileInfos = GetSourceInfo();
 
             Component destDir;
-            string lastDestPath;
-            Status status = CheckPath(_paths[1], out destDir, out lastDestPath, true);
+            MString lastDestPath;
+            Status status = CheckPath(ref _paths[1], out destDir, out lastDestPath, true);
             if (status != Status.Succeed)
             {
                 Logger.Log(status);
@@ -216,62 +216,6 @@ namespace VisualDisk
             }
             targetDir.Add(file);
 
-        }
-
-        public Status CheckDestRoot(string path, string[] destPaths, out Component target)
-        {
-            string rootName = destPaths[0];
-            target = null;
-
-            if (fullSpaceNameRegex.IsMatch(path))
-                return Status.Error_Path_Format;
-
-            if (path.LastIndexOf("\\") != -1 && nameRegex.IsMatch(path.Substring(rootName.Length, path.LastIndexOf("\\") - rootName.Length)))
-                return Status.Error_Path_Format;
-
-
-            if (rootName == "")
-            {
-                target = VsDiskMoniter.Instance.Root;
-            }
-            else if (rootName == ".")
-            {
-                target = VsDiskMoniter.Instance.Cursor;
-            }
-            else if (rootName == "..")
-            {
-                if (VsDiskMoniter.Instance.Cursor.parent != null)
-                    target = VsDiskMoniter.Instance.Cursor.parent;
-                else
-                    target = VsDiskMoniter.Instance.Cursor;
-            }
-            else if (rootName.Last() == ':')
-            {
-                if (IsRealDisk(rootName))
-                    return Status.Error_Write_Disable;
-
-                if (rootName.ToLower() != "v:")
-                    return Status.Error_Write_Disable;
-
-                target = VsDiskMoniter.Instance.Root;
-            }
-            else
-            {
-                target = VsDiskMoniter.Instance.Cursor;
-
-                if (destPaths.Length < 2)
-                    return Status.Succeed;
-
-                if (nameRegex.IsMatch(rootName))
-                    return Status.Error_Path_Format;
-
-                target = EnterDirectory(VsDiskMoniter.Instance.Cursor, rootName);
-
-                if (target == null)
-                    return Status.Error_Path_Not_Found;
-            }
-
-            return Status.Succeed;
         }
 
         private bool IsRealDisk(string rootName)

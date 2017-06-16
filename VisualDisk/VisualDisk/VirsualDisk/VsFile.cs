@@ -10,10 +10,10 @@ namespace VisualDisk
     public class VsFile : Component
     {
         //private const int BUFFER_MAX_LEN = 65535;
-        private string _exName;
+        private MString _exName;
         private byte[] _buffer = new byte[0];
 
-        public VsFile(string name, string exName) : base(name)
+        public VsFile(MString name, MString exName) : base(name)
         {
             _exName = exName;
         }

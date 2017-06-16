@@ -10,10 +10,10 @@ namespace VisualDisk
     public class DirCommand : Command
     {
         private bool _formatAD, _formatS;
-        private string _path;
+        private MString _path;
         private Component _target;
 
-        public DirCommand(string path, bool formatAD, bool formatS)
+        public DirCommand(MString path, bool formatAD, bool formatS)
         {
             _path = path;
             _formatAD = formatAD;
@@ -28,8 +28,8 @@ namespace VisualDisk
             }
             else
             {
-                string fileName;
-                Status status = CheckPath(_path, out _target, out fileName, false);
+                MString fileName;
+                Status status = CheckPath(ref _path, out _target, out fileName, false);
                 if (status != Status.Succeed)
                 {
                     Logger.Log(status);

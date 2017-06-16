@@ -8,7 +8,7 @@ namespace VisualDisk
 {
     public class VsDirectory : Component
     {
-        public VsDirectory(string name) : base(name)
+        public VsDirectory(MString name) : base(name)
         {
         }
 

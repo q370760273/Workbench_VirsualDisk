@@ -9,10 +9,10 @@ namespace VisualDisk
 {
     public class CdCommand : Command
     {
-        private string _path;
+        private MString _path;
         private Component _target;
 
-        public CdCommand(string path)
+        public CdCommand(MString path)
         {
             _path = path;
         }
@@ -22,8 +22,8 @@ namespace VisualDisk
             if (_path == "")
                 return;
 
-            string fileName;
-            Status status = CheckPath(_path, out _target, out fileName, false);
+            MString fileName;
+            Status status = CheckPath(ref _path, out _target, out fileName, false);
             if (status != Status.Succeed)
             {
                 Logger.Log(status);

@@ -9,20 +9,20 @@ namespace VisualDisk
 {
     public class DeleteFileCommand : Command
     {
-        private string[] _paths;
+        private MString[] _paths;
 
-        public DeleteFileCommand(string[] paths)
+        public DeleteFileCommand(MString[] paths)
         {
             _paths = paths;
         }
 
         public override void Excute()
         {
-            foreach (string path in _paths)
+            for (int i = 0; i <_paths.Length; i++)
             {
                 Component target;
-                string fileName;
-                Status status = CheckPath(path, out target, out fileName, true);
+                MString fileName;
+                Status status = CheckPath(ref _paths[i], out target, out fileName, true);
                 if (status != Status.Succeed)
                 {
                     Logger.Log(status);

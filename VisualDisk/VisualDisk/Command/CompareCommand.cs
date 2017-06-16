@@ -9,9 +9,9 @@ namespace VisualDisk
 {
     public class CompareCommand : Command
     {
-        private string[] _paths;
+        private MString[] _paths;
 
-        public CompareCommand(string[] paths)
+        public CompareCommand(MString[] paths)
         {
             _paths = paths;
         }
@@ -24,17 +24,17 @@ namespace VisualDisk
                 return;
             }
 
-            string sourcePath = _paths[0].Replace("\"", "").Replace("\\\\", "\\");
+            MString sourcePath = _paths[0].Replace("\"", "").MultiReplace("\\", "\\");
             if (!File.Exists(sourcePath))
             {
                 Logger.Log(Status.Error_Path_Not_Found);
                 return;
             }
 
-            string destPath = _paths[1].Replace("\"", "").Replace("\\\\", "\\");
+            MString destPath = _paths[1];
             Component destDir;
-            string lastDestPath;
-            Status status = CheckPath(destPath, out destDir, out lastDestPath, false);
+            MString lastDestPath;
+            Status status = CheckPath(ref destPath, out destDir, out lastDestPath, false);
             if (status != Status.Succeed)
             {
                 Logger.Log(status);

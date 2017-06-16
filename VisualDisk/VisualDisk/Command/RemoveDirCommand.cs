@@ -9,10 +9,10 @@ namespace VisualDisk
 {
     public class RemoveDirCommand : Command
     {
-        private string _path;
+        private MString _path;
         private Component _tempTarget;
 
-        public RemoveDirCommand(string path)
+        public RemoveDirCommand(MString path)
         {
             _path = path;
         }
@@ -24,8 +24,8 @@ namespace VisualDisk
                 return;
             }
 
-            string fileName;
-            Status status = CheckPath(_path, out _tempTarget, out fileName, false);
+            MString fileName;
+            Status status = CheckPath(ref _path, out _tempTarget, out fileName, false);
             if (status != Status.Succeed)
             {
                 Logger.Log(status);

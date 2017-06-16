@@ -17,14 +17,14 @@ namespace VisualDisk
             throw new NotImplementedException();
         }
 
-        public virtual Status CheckPath(string path, out Component targetDir, out string fileName, bool usePattern)
+        public virtual Status CheckPath(ref MString path, out Component targetDir, out MString fileName, bool usePattern)
         {
             targetDir = null;
             fileName = "*";
-            path = path.Replace("\"", "").Replace("\\\\", "\\");
-            string[] paths = path.Split('\\');
+            path = path.Replace("\"", "").MultiReplace("\\", "\\");
+            MString[] paths = path.MultiSplit('\\');
 
-            string rootName = paths[0];
+            MString rootName = paths[0];
             bool isEnding = paths.Length < 2;
             Status status = CheckRootPath(ref targetDir, ref fileName, rootName, usePattern, isEnding);
             if(status != Status.Succeed || isEnding)
@@ -52,10 +52,10 @@ namespace VisualDisk
                     continue;
                 }
 
-                targetDir = EnterDirectory(targetDir, paths[i]);
-                if (targetDir == null)
+                status = EnterDirectory(ref targetDir, paths[i]);
+                if (status != Status.Succeed)
                 {
-                    return Status.Error_Path_Not_Found;
+                    return status;
                 }
             }
 
@@ -64,7 +64,7 @@ namespace VisualDisk
             return CheckEndPath(ref targetDir, ref fileName, endName, usePattern);
         }
 
-        private Status CheckRootPath(ref Component targetDir, ref string fileName, string rootName, bool usePattern, bool isEnding)
+        protected virtual Status CheckRootPath(ref Component targetDir, ref MString fileName, MString rootName, bool usePattern, bool isEnding)
         {
             if (rootName == "")
             {
@@ -98,17 +98,13 @@ namespace VisualDisk
                 if (nameRegex.IsMatch(rootName))
                     return Status.Error_Path_Format;
 
-                VsDirectory dir = EnterDirectory(targetDir, rootName);
-                if (dir != null)
-                    targetDir = dir;
-                else
-                    return Status.Error_Path_Not_Found;
+                return EnterDirectory(ref targetDir, rootName);
             }
 
             return Status.Succeed;
         }
 
-        private Status CheckEndPath(ref Component targetDir, ref string fileName, string endName, bool usePattern)
+        protected virtual Status CheckEndPath(ref Component targetDir, ref MString fileName, MString endName, bool usePattern)
         {
             if (endName == "")
             {
@@ -123,10 +119,9 @@ namespace VisualDisk
                 if (new Regex("[/:\"<>|]").IsMatch(endName))
                     return Status.Error_Path_Format;
 
-                VsDirectory dir = EnterDirectory(targetDir, endName);
-                if (dir != null)
+                Status status = EnterDirectory(ref targetDir, endName);
+                if (status == Status.Succeed)
                 {
-                    targetDir = dir;
                     fileName = "*";
                 }
             }
@@ -135,10 +130,9 @@ namespace VisualDisk
                 if (nameRegex.IsMatch(endName))
                     return Status.Error_Path_Format;
 
-                VsDirectory dir = EnterDirectory(targetDir, endName);
-                if (dir != null)
+                Status status = EnterDirectory(ref targetDir, endName);
+                if (status == Status.Succeed)
                 {
-                    targetDir = dir;
                     fileName = "*";
                 }
             }
@@ -146,9 +140,19 @@ namespace VisualDisk
             return Status.Succeed;
         }
 
-        protected virtual VsDirectory EnterDirectory(Component source, string name)
+        protected virtual Status EnterDirectory(ref Component source, MString name)
         {
-            return source.GetDirectory(name);
+            var dir = source.GetDirectory(name);
+
+            if (dir == null)
+            {
+                return Status.Error_Path_Not_Found;
+            }
+            else
+            {
+                source = dir;
+                return Status.Succeed;
+            }
         }
     }
 }

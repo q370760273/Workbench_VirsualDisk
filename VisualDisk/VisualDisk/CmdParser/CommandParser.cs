@@ -9,7 +9,7 @@ namespace VisualDisk
     public class CommandParser
     {
         public ICommand _cmd;
-        public void Parse(string cmdInfo)
+        public void Parse(MString cmdInfo)
         {
             cmdInfo = cmdInfo.Trim();
             if (!CheckValid(cmdInfo))
@@ -21,7 +21,7 @@ namespace VisualDisk
             ExcuteCommand();
         }
 
-        protected bool CheckValid(string cmdInfo)
+        protected bool CheckValid(MString cmdInfo)
         {
             if (cmdInfo == "")
                 return false;
@@ -34,7 +34,7 @@ namespace VisualDisk
             _cmd.Excute();
         }
 
-        protected virtual bool CreateCommand(string cmdInfo)
+        protected virtual bool CreateCommand(MString cmdInfo)
         {
             return false;
         }

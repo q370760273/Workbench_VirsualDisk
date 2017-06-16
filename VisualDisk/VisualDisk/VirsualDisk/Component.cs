@@ -8,12 +8,12 @@ namespace VisualDisk
 {
     public class Component
     {
-        protected string _name;
+        protected MString _name;
         protected Component _parent;
         protected List<Component> _childs = new List<Component>();
         protected DateTime _changeTime;
 
-        public Component(string name)
+        public Component(MString name)
         {
             _name = name;
             RefreshTime();

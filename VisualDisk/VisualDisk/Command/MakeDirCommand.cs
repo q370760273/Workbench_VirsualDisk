@@ -9,11 +9,9 @@ namespace VisualDisk
 {
     public class MakeDirCommand : Command
     {
-        private string _path;
+        private MString _path;
         private Component _targetTemp;
-        Regex nameRegex = new Regex("[/?*:\"<>|]");
-        Regex fullSpaceNameRegex = new Regex(@"\\[\s]+\\");
-        public MakeDirCommand(string path)
+        public MakeDirCommand(MString path)
         {
             _path = path;
         }
@@ -26,16 +24,30 @@ namespace VisualDisk
                 return;
             }
 
-            string filename;
-            Status status = CheckPath(_path, out _targetTemp, out filename, false);
+            MString filename;
+            Status status = CheckPath(ref _path, out _targetTemp, out filename, false);
             if (status != Status.Succeed)
             {
-                Logger.Log(status);
+                if(status == Status.Error_Path_Already_Exist)
+                    Logger.Log(status, _path);
+                else
+                    Logger.Log(status);
             }
         }
 
-        protected override VsDirectory EnterDirectory(Component source, string name)
+        protected override Status CheckEndPath(ref Component targetDir, ref MString fileName, MString endName, bool usePattern)
         {
+            if (targetDir.GetChild(endName) != null)
+                return Status.Error_Path_Already_Exist;
+
+            return base.CheckEndPath(ref targetDir, ref fileName, endName, usePattern);
+        }
+
+        protected override Status EnterDirectory(ref Component source, MString name)
+        {
+            if(source.GetFile(name) != null)
+                return Status.Error_Path_Already_Exist;
+
             VsDirectory child = source.GetDirectory(name);
 
             if (child == null)
@@ -44,7 +56,8 @@ namespace VisualDisk
                 source.Add(child);
             }
 
-            return child;
+            source = child;
+            return Status.Succeed;
         }
     }
 }
