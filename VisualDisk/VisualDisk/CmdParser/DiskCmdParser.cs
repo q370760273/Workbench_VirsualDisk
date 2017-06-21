@@ -19,22 +19,22 @@ namespace VisualDisk
 
         protected override bool CreateCommand(MString cmdInfo)
         {
-            if (cmdInfo.StartsWith(CD, true) && (cmdInfo.Substring(CD.Length).TrimEnd().Length == 0 || (cmdInfo.Substring(CD.Length).StartsWith(new string[] { " ", ".", "\\" }))))
+            if (CheckCommand(cmdInfo, CD, false))
             {
                 MString newDir = cmdInfo.Substring(CD.Length).Trim();
                 _cmd = new CdCommand(newDir);
             }
-            else if (cmdInfo.StartsWith(MKDIR, true) && (cmdInfo.Substring(MKDIR.Length).TrimEnd().Length == 0 || (cmdInfo.Substring(MKDIR.Length).StartsWith(new string[] { " ", ".", "\\" }))))
+            else if (CheckCommand(cmdInfo, MKDIR, false))
             {
                 MString newDir = cmdInfo.Substring(MKDIR.Length).Trim();
                 _cmd = new MakeDirCommand(newDir);
             }
-            else if (cmdInfo.StartsWith(RMDIR, true) && (cmdInfo.Substring(RMDIR.Length).TrimEnd().Length == 0 || (cmdInfo.Substring(RMDIR.Length).StartsWith(new string[] { " ", ".", "\\" }))))
+            else if (CheckCommand(cmdInfo, RMDIR, false))
             {
                 MString newDir = cmdInfo.Substring(RMDIR.Length).Trim();
                 _cmd = new RemoveDirCommand(newDir);
             }
-            else if (cmdInfo.StartsWith(DIR, true) && (cmdInfo.Substring(DIR.Length).TrimEnd().Length == 0 || (cmdInfo.Substring(DIR.Length).StartsWith(new string[] { " ", ".", "\\", "/" }))))
+            else if (CheckCommand(cmdInfo, DIR, true))
             {
                 MString newDir = cmdInfo.Substring(DIR.Length).Trim();
                 MString[] attrs = { "ad", "s" };
@@ -45,19 +45,19 @@ namespace VisualDisk
                 }
                 _cmd = new DirCommand(newDir.Trim(), results[0], results[1]);
             }
-            else if (cmdInfo.StartsWith(COPY, true) && (cmdInfo.Substring(COPY.Length).TrimEnd().Length == 0 || (cmdInfo.Substring(COPY.Length).StartsWith(new string[] { " ", ".", "\\" }))))
+            else if (CheckCommand(cmdInfo, COPY, true))
             {
                 MString newDir = cmdInfo.Substring(COPY.Length).Trim();
                 MString[] paths = newDir.MultiSplit(' ');
                 _cmd = new CopyCommand(paths);
             }
-            else if (cmdInfo.StartsWith(DEL, true) && (cmdInfo.Substring(DEL.Length).TrimEnd().Length == 0 || (cmdInfo.Substring(DEL.Length).StartsWith(new string[] { " ", ".", "\\" }))))
+            else if (CheckCommand(cmdInfo, DEL, true))
             {
                 MString newDir = cmdInfo.Substring(DEL.Length).Trim();
                 MString[] paths = newDir.MultiSplit(' ');
                 _cmd = new DeleteFileCommand(paths);
             }
-            else if (cmdInfo.StartsWith(COMPARE, true) && (cmdInfo.Substring(COMPARE.Length).TrimEnd().Length == 0 || (cmdInfo.Substring(COMPARE.Length).StartsWith(new string[] { " ", ".", "\\" }))))
+            else if (CheckCommand(cmdInfo, COMPARE, true))
             {
                 MString newDir = cmdInfo.Substring(COMPARE.Length).Trim();
                 MString[] paths = newDir.MultiSplit(' ');
@@ -75,6 +75,11 @@ namespace VisualDisk
             }
 
             return true;
+        }
+
+        private bool CheckCommand(MString cmdInfo, MString cmd, bool enableAttribute)
+        {
+            return cmdInfo.StartsWith(cmd, true) && (cmdInfo.Substring(cmd.Length).TrimEnd().Length == 0 || (cmdInfo.Substring(cmd.Length).StartsWith(enableAttribute ? new string[] { " ", ".", "\\", "/" } : new string[] { " ", ".", "\\" })));
         }
 
         private bool CheckAttribute(ref MString newDir, MString[] attrs, bool[] results)
