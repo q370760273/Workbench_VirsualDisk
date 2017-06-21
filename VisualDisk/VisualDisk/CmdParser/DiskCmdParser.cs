@@ -45,19 +45,19 @@ namespace VisualDisk
                 }
                 _cmd = new DirCommand(newDir.Trim(), results[0], results[1]);
             }
-            else if (CheckCommand(cmdInfo, COPY, true))
+            else if (CheckCommand(cmdInfo, COPY, false))
             {
                 MString newDir = cmdInfo.Substring(COPY.Length).Trim();
                 MString[] paths = newDir.MultiSplit(' ');
                 _cmd = new CopyCommand(paths);
             }
-            else if (CheckCommand(cmdInfo, DEL, true))
+            else if (CheckCommand(cmdInfo, DEL, false))
             {
                 MString newDir = cmdInfo.Substring(DEL.Length).Trim();
                 MString[] paths = newDir.MultiSplit(' ');
                 _cmd = new DeleteFileCommand(paths);
             }
-            else if (CheckCommand(cmdInfo, COMPARE, true))
+            else if (CheckCommand(cmdInfo, COMPARE, false))
             {
                 MString newDir = cmdInfo.Substring(COMPARE.Length).Trim();
                 MString[] paths = newDir.MultiSplit(' ');
