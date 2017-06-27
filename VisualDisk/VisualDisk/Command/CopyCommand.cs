@@ -128,7 +128,7 @@ namespace VisualDisk
                     }
                     else
                     {
-                        if (Logger.ChooseDialog(ref result, "覆盖 {0} 吗?", fi.Name))
+                        if (Logger.ChooseDialogYNA(ref result, "覆盖 {0} 吗?", fi.Name))
                             file.Remove();
                         else
                             continue;
@@ -163,7 +163,7 @@ namespace VisualDisk
                     }
                     else
                     {
-                        if (Logger.ChooseDialog(ref result, "覆盖 {0} 吗?", fi.Name))
+                        if (Logger.ChooseDialogYNA(ref result, "覆盖 {0} 吗?", fi.Name))
                             file.Remove();
                         else
                             continue;
@@ -201,7 +201,7 @@ namespace VisualDisk
                 }
                 else
                 {
-                    if (Logger.ChooseDialog(ref result, "覆盖 {0} 吗?", name))
+                    if (Logger.ChooseDialogYNA(ref result, "覆盖 {0} 吗?", name))
                         file.Remove();
                     else
                         return;

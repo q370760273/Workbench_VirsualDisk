@@ -9,12 +9,14 @@ namespace VisualDisk
 {
     public class RemoveDirCommand : Command
     {
+        private bool _formatS;
         private MString _path;
         private Component _tempTarget;
 
-        public RemoveDirCommand(MString path)
+        public RemoveDirCommand(MString path, bool formatS)
         {
             _path = path;
+            _formatS = formatS;
         }
         public override void Excute()
         {
@@ -50,6 +52,20 @@ namespace VisualDisk
                     {
                         Logger.Log(Status.Error_IO);
                         return;
+                    }
+                }
+
+                if (_tempTarget.childs.Count > 0)
+                {
+                    if (!_formatS)
+                    {
+                        Logger.Log(Status.Dir_Not_Empty);
+                        return;
+                    }
+                    else
+                    {
+                        if (!Logger.ChooseDialogYN("是否确认"))
+                            return;
                     }
                 }
 

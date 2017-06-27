@@ -32,7 +32,13 @@ namespace VisualDisk
             else if (CheckCommand(cmdInfo, RMDIR, false))
             {
                 MString newDir = cmdInfo.Substring(RMDIR.Length).Trim();
-                _cmd = new RemoveDirCommand(newDir);
+                MString[] attrs = { "s" };
+                bool[] results = new bool[1];
+                if (!CheckAttribute(ref newDir, attrs, results))
+                {
+                    return false;
+                }
+                _cmd = new RemoveDirCommand(newDir, results[0]);
             }
             else if (CheckCommand(cmdInfo, DIR, true))
             {

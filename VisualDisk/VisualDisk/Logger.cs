@@ -18,6 +18,7 @@ namespace VisualDisk
         Error_Disk_Not_Found,
         Error_IO,
         Error_Write_Disable,
+        Dir_Not_Empty,
     }
     public class Logger
     {
@@ -52,10 +53,23 @@ namespace VisualDisk
                 case Status.Error_Write_Disable:
                     Console.WriteLine("只允许向V盘写入数据。");
                     break;
+                case Status.Dir_Not_Empty:
+                    Console.WriteLine("目录不是空的。");
+                    break;
             }
         }
 
-        public static bool ChooseDialog(ref string result, string content, params string[] datas)
+        public static bool ChooseDialogYN(string content, params string[] datas)
+        {
+            Console.Write(content + " (Yes/No):", datas);
+            string result = Console.ReadLine();
+            if (result.Equals("y", StringComparison.CurrentCultureIgnoreCase))
+                return true;
+            else
+                return false;
+        }
+
+        public static bool ChooseDialogYNA(ref string result, string content, params string[] datas)
         {
             if (!result.Equals("a", StringComparison.CurrentCultureIgnoreCase))
             {

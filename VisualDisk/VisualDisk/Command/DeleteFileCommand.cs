@@ -40,11 +40,18 @@ namespace VisualDisk
 
         private Status ExcuteByPattern(Component target, string pattern)
         {
-            if (pattern == "*") //复制到上一个目录下
+            if (pattern == "*") //删除目录下所有文件
             {
-                target.Remove();
+                for (int i = 0; i < target.childs.Count; i++)
+                {
+                    Component child = target.childs[i];
+                    if (child.IsDirectory())
+                        continue;
+
+                    child.Remove();
+                }
             }
-            else if (pattern.StartsWith("*.")) //把复制的名字的后缀修改掉
+            else if (pattern.StartsWith("*.")) //删除指定后缀名的文件
             {
                 string matchStr = pattern.Substring(2);
 
@@ -64,7 +71,7 @@ namespace VisualDisk
                     }
                 }
             }
-            else  //把复制的名字和后缀全改掉
+            else  //删除单个文件
             {
                 if (nameRegex.IsMatch(pattern))
                     return Status.Error_Path_Format;
