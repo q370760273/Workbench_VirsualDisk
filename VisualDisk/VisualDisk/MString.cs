@@ -9,6 +9,12 @@ namespace VisualDisk
 {
     public struct MString
     {
+        public enum TrimType
+        {
+            Left = 1,
+            Right = 2,
+        }
+
         public static readonly MString Null = null;
         public static readonly MString Empty = "";
         private char[] _data;
@@ -291,7 +297,7 @@ namespace VisualDisk
             {
                 return this.TrimHelper(trimChars, 2);
             }
-            return this.TrimHelper(2);
+            return this.TrimHelper(TrimType.Left | TrimType.Right);
         }
 
         public MString TrimStart(params char[] trimChars)
@@ -300,7 +306,7 @@ namespace VisualDisk
             {
                 return this.TrimHelper(trimChars, 0);
             }
-            return this.TrimHelper(0);
+            return this.TrimHelper(TrimType.Left);
         }
 
         public MString TrimEnd(params char[] trimChars)
@@ -309,14 +315,14 @@ namespace VisualDisk
             {
                 return this.TrimHelper(trimChars, 1);
             }
-            return this.TrimHelper(1);
+            return this.TrimHelper(TrimType.Right);
         }
 
-        private MString TrimHelper(int trimType)
+        private MString TrimHelper(TrimType trimType)
         {
             int end = this.Length - 1;
             int start = 0;
-            if (trimType != 1)
+            if (((uint)trimType | (uint)TrimType.Left) != 0)
             {
                 start = 0;
                 while (start < this.Length)
@@ -328,7 +334,7 @@ namespace VisualDisk
                     start++;
                 }
             }
-            if (trimType != 0)
+            if (((uint)trimType | (uint)TrimType.Right) != 0)
             {
                 end = this.Length - 1;
                 while (end >= start)
