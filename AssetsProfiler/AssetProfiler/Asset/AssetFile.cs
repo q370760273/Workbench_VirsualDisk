@@ -1,7 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System;
 
+[Serializable]
 public class AssetFile : AssetData
 {
     List<AssetFile> _defFiles = new List<AssetFile>();
@@ -10,4 +12,32 @@ public class AssetFile : AssetData
     public AssetFile(string name) : base(name)
     {
     }
+
+    public override void Dispose()
+    {
+        base.Dispose();
+        _defFiles.Clear();
+        _reDefFiles.Clear();
+    }
+
+    public override bool IsDirectory()
+    {
+        return false;
+    }
+
+    public void AddDefFile(AssetFile file)
+    {
+        _defFiles.Add(file);
+    }
+
+    public void AddReDefFile(AssetFile file)
+    {
+        _reDefFiles.Add(file);
+    }
+
+    public List<AssetFile> defFiles
+    { get { return _defFiles; } }
+
+    public List<AssetFile> reDefFiles
+    { get { return _reDefFiles; } }
 }

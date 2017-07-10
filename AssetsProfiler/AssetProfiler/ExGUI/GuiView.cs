@@ -15,6 +15,11 @@ public class GuiView
 
     public virtual void Dispose()
     {
+        _parent = null;
+
+        foreach (GuiView child in _childs)
+            child.Dispose();
+
         _childs.Clear();
     }
 
@@ -33,4 +38,7 @@ public class GuiView
         child._parent = this;
         _childs.Add(child);
     }
+
+    public Rect rect
+    { get { return _rect; } }
 }
