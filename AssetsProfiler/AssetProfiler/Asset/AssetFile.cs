@@ -25,6 +25,12 @@ public class AssetFile : AssetData
         return false;
     }
 
+    public override bool ApplyPattern(string pattern)
+    {
+        _visible = _name.ToLower().Contains(pattern);
+        return _visible;
+    }
+
     public void AddDefFile(AssetFile file)
     {
         _defFiles.Add(file);

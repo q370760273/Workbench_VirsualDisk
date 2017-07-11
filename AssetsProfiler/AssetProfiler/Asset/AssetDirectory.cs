@@ -28,6 +28,17 @@ public class AssetDirectory : AssetData
         return true;
     }
 
+    public override bool ApplyPattern(string pattern)
+    {
+        bool needShow = false;
+        foreach (AssetData child in _childs)
+        {
+            needShow |= child.ApplyPattern(pattern);
+        }
+        _visible = needShow;
+        return _visible;
+    }
+
     public void AddChild(AssetData child)
     {
         child.SetParent(this);

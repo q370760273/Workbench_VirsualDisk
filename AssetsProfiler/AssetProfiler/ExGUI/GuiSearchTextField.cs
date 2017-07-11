@@ -46,7 +46,7 @@ public class GuiSearchTextField : GuiTextField
     public override void Draw()
     {
         //选择取消按钮(x)的GUIStyle
-        GUIStyle cancelBtnStyle = (_InputSearchText != "") ? TextFieldRoundEdgeCancelButton : TextFieldRoundEdgeCancelButtonEmpty;
+        GUIStyle cancelBtnStyle = (_inputText != "") ? TextFieldRoundEdgeCancelButton : TextFieldRoundEdgeCancelButtonEmpty;
 
         //如果面板重绘
         if (Event.current.type == EventType.Repaint)
@@ -54,7 +54,7 @@ public class GuiSearchTextField : GuiTextField
             //根据是否是专业版来选取颜色
             GUI.contentColor = (EditorGUIUtility.isProSkin ? Color.black : new Color(0f, 0f, 0f, 0.5f));
             //当没有输入的时候提示“请输入”
-            if (string.IsNullOrEmpty(_InputSearchText))
+            if (string.IsNullOrEmpty(_inputText))
             {
                 TextFieldRoundEdge.Draw(_tipsRect, new GUIContent("资源类型过滤"), 0);
             }
@@ -66,16 +66,22 @@ public class GuiSearchTextField : GuiTextField
             GUI.contentColor = Color.white;
         }
 
-        _InputSearchText = EditorGUI.TextField(_searchTextRect, _InputSearchText, TransparentTextField);
+        _inputText = EditorGUI.TextField(_searchTextRect, _inputText, TransparentTextField);
 
         //绘制取消按钮，位置要在输入框右边
-        if (GUI.Button(_cancleBtnRect, GUIContent.none, cancelBtnStyle) && _InputSearchText != "")
+        if (GUI.Button(_cancleBtnRect, GUIContent.none, cancelBtnStyle) && _inputText != "")
         {
-            _InputSearchText = "";
+            _inputText = "";
             //用户是否做了输入
             GUI.changed = true;
             //把焦点移开输入框
             GUIUtility.keyboardControl = 0;
+        }
+
+        if (_handle != null && _inputText != _lastInputText)
+        {
+            _lastInputText = _inputText;
+            _handle(_inputText);
         }
     }
 }

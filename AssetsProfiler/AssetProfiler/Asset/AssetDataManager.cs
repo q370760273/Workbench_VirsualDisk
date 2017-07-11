@@ -45,6 +45,7 @@ public class AssetDataManager : Singleton<AssetDataManager>
         EditorUtility.DisplayProgressBar("Compress file Bar", "Check assets total number", 0);
         DirectoryInfo direction = new DirectoryInfo(_assetDatas.Root.Path);
         FileInfo[] files = direction.GetFiles("*.meta", SearchOption.AllDirectories);
+        _progressValue = 0;
         _progressTotal = files.Length;
 
         BuildDirectory(_assetDatas.Root);
@@ -131,7 +132,17 @@ public class AssetDataManager : Singleton<AssetDataManager>
         return target as AssetFile; //最后一个引用路径名肯定为file
     }
 
-    public List<AssetData> GetAllUnusedFiles()
+    public void ApplyPattern(string pattern)
+    {
+        _assetDatas.Root.ApplyPattern(pattern.ToLower());
+    }
+
+    public AssetData[] GetAllAssetDatas()
+    {
+        return _assetDatas.Root.childs.ToArray();
+    }
+
+    public AssetData[] GetAllUnusedAssetDatas()
     {
         List<AssetData> unusedFiles = new List<AssetData>();
         foreach (AssetFile file in _assetDatas.AllAssetFiles)
@@ -139,7 +150,17 @@ public class AssetDataManager : Singleton<AssetDataManager>
             if (file.reDefFiles.Count == 0)
                 unusedFiles.Add(file);
         }
-        return unusedFiles;
+        return unusedFiles.ToArray();
+    }
+
+    public AssetFile GetAssetFile(string name)
+    {
+        foreach (AssetFile file in _assetDatas.AllAssetFiles)
+        {
+            if (file.Name == name)
+                return file;
+        }
+        return null;
     }
 
     public AssetDirectory Root

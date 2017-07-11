@@ -8,10 +8,12 @@ public class AssetData
     protected string _name;
     protected string _path;
     protected AssetData _parent;
+    protected bool _visible;
 
     public AssetData(string name)
     {
         _path = _name = name;
+        _visible = true;
     }
 
     public virtual void Dispose()
@@ -24,6 +26,11 @@ public class AssetData
         throw new NotImplementedException();
     }
 
+    public virtual bool ApplyPattern(string pattern)
+    {
+        throw new NotImplementedException();
+    }
+
     public void SetParent(AssetData parent)
     {
         _parent = parent;
@@ -32,6 +39,9 @@ public class AssetData
 
     public bool FoldState
     { get; set; }
+
+    public bool Visible
+    { get { return _visible; } }
 
     public string Path
     { get { return _path; } }

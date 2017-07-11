@@ -6,7 +6,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 public class LocalDataManager
 {
-    private const string LOCAL_DATA_PATH = "D://AssetData.bin";
+    private static readonly string LOCAL_DATA_PATH = Application.dataPath + "/Editor/AssetProfiler/LocalResources/AssetData.bin";
 
     public static bool CheckExist()
     {

@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEditor;
 using System;
+using System.IO;
 
 public class AssetViewer : EditorWindow
 {
@@ -15,6 +16,7 @@ public class AssetViewer : EditorWindow
     public DateTime OpenTime;
     private Texture2D _lineTexure;
     private GuiView _view;
+    private GuiSearchTextField _searchTextField;
     private GuiLabel _timeLabel;
     private GuiSelectionGrid _assetDataSelectedGrid;
     private GuiSelectionGrid _dependenceSelectedGrid;
@@ -23,9 +25,11 @@ public class AssetViewer : EditorWindow
 
     private void OnDestroy()
     {
+        AssetDataManager.Instance.ApplyPattern("");
         LocalDataManager.Serialize(AssetDataManager.Instance.AssetDatas);
         EventHandler.DestoryInstance();
         AssetDataManager.DestoryInstance();
+        AssetDatabase.Refresh();
     }
 
     void Awake()
@@ -71,11 +75,12 @@ public class AssetViewer : EditorWindow
         _view.AddChild(button);
 
         button = new GuiButton(new Rect(340, 2, 16, 16), "?");
-        button.RegisterHandler(RefreshAssets);
+        button.RegisterHandler(ShowHelpInfo);
         _view.AddChild(button);
 
-        GuiSearchTextField searchTextField = new GuiSearchTextField(new Rect(130, 1, 196, 20));
-        _view.AddChild(searchTextField);
+        _searchTextField = new GuiSearchTextField(new Rect(130, 1, 196, 20));
+        _searchTextField.OnTextChange(OnSearchTextChange);
+        _view.AddChild(_searchTextField);
 
         _timeLabel = new GuiLabel(new Rect(400, 0, 500, 20), "");
         _view.AddChild(_timeLabel);
@@ -124,24 +129,27 @@ public class AssetViewer : EditorWindow
         _dependenceSelectedGrid.HandleSelected();
     }
 
+    private void ShowHelpInfo(GuiView view)
+    {
+        EditorUtility.DisplayDialog("使用说明", HelpInformation.GetHelpInformation(), "确定");
+    }
+
+    private void OnSearchTextChange(string pattern)
+    {
+        AssetDataManager.Instance.ApplyPattern(pattern);
+    }
+
     private void ShowAllAssets()
     {
-        _assetDatafoldoutTree.Reset(AssetDataManager.Instance.Root.childs.ToArray());
+        _assetDatafoldoutTree.Reset(AssetDataManager.Instance.GetAllAssetDatas());
     }
 
     private void ShowUnusedAssets()
     {
-        if (OpenTime > AssetDataManager.Instance.AssetDatas.ChangeTime)
-        {
-            if (EditorUtility.DisplayDialog("", "当前资源数据未更新，请先更新资源数据", "确定"))
-            {
-                RefreshAssets(null);
-            }
-        }
-        else
-        {
-            _assetDatafoldoutTree.Reset(AssetDataManager.Instance.GetAllUnusedFiles().ToArray());
-        }
+        if (ShowRefreshAssetDatasDialog())
+            return;
+
+        _assetDatafoldoutTree.Reset(AssetDataManager.Instance.GetAllUnusedAssetDatas());
     }
 
     private void ShowDependencies()
@@ -151,11 +159,27 @@ public class AssetViewer : EditorWindow
 
     private void ShowRedependencies()
     {
+        if (ShowRefreshAssetDatasDialog())
+            return;
+
         _dependencefoldoutTree.AttachDrawer(new RedependenceInfoDrawer(_dependencefoldoutTree));
     }
 
     private void ShowDependenciesInfo(object[] param)
     {
         _dependencefoldoutTree.Reset(new AssetData[] { param[0] as AssetData });
+    }
+
+    private bool ShowRefreshAssetDatasDialog()
+    {
+        if (OpenTime > AssetDataManager.Instance.AssetDatas.ChangeTime)
+        {
+            if (EditorUtility.DisplayDialog("", "当前资源数据未更新，请先更新资源数据", "确定"))
+            {
+                RefreshAssets(null);
+                return true;
+            }
+        }
+        return false;
     }
 }

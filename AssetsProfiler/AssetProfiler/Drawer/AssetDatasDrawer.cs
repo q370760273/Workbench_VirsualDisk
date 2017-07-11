@@ -14,10 +14,15 @@ public class AssetDatasDrawer : GuiDrawer
     public override object[] Draw()
     {
        AssetData[] rootChilds = (_view as GuiFoldoutTree).rootChilds;
-        _showCount = rootChilds.Length;
+        _showCount = 0;
 
         for (int i = 0; i < rootChilds.Length; i++)
         {
+            if (!rootChilds[i].Visible)
+                continue;
+
+            _showCount++;
+
             if (rootChilds[i].IsDirectory())
             {
                 DrawFoldout(rootChilds[i] as AssetDirectory);
@@ -38,11 +43,15 @@ public class AssetDatasDrawer : GuiDrawer
     {
         if (directory.FoldState = EditorGUILayout.Foldout(directory.FoldState, directory.Name))
         {
-            _showCount += directory.childs.Count;
             EditorGUI.indentLevel++;
             string textSpace = OutoFillSpace();
             foreach (AssetData child in directory.childs)
             {
+                if (!child.Visible)
+                    continue;
+
+                _showCount++;
+
                 if (child.IsDirectory())
                 {
                     DrawFoldout(child as AssetDirectory);
