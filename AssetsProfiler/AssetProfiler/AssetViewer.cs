@@ -56,7 +56,7 @@ public class AssetViewer : EditorWindow
 
     private void RegisterHandlers()
     {
-        EventHandler.Instance.RegisterHandler("Show_Dependencies_Info", ShowDependenciesInfo);
+        EventHandler.Instance.RegisterHandler(EventCode.ShowDependencies, ShowDependenciesInfo);
     }
 
     private void InitTexture()
@@ -116,6 +116,7 @@ public class AssetViewer : EditorWindow
         GUI.DrawTexture(new Rect(0, 60, 900, 1), _lineTexure);
         GUI.DrawTexture(new Rect(330, 33, 2, 567), _lineTexure);
     }
+
     private void RefreshAssets(GuiView view)
     {
         AssetDataManager.Instance.BuildAllDatas();

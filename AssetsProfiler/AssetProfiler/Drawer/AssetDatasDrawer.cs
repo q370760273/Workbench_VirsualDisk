@@ -31,7 +31,7 @@ public class AssetDatasDrawer : GuiDrawer
             {
                 if(GUILayout.Button(rootChilds[i].Name, GUI.skin.label))
                 {
-                    EventHandler.Instance.HandleInvoke("Show_Dependencies_Info", rootChilds[i]);
+                    EventHandler.Instance.HandleInvoke(EventCode.ShowDependencies, rootChilds[i]);
                 }
             }
         }
@@ -60,7 +60,7 @@ public class AssetDatasDrawer : GuiDrawer
                 {
                     if (GUILayout.Button(textSpace + child.Name, GUI.skin.label))
                     {
-                        EventHandler.Instance.HandleInvoke("Show_Dependencies_Info", child);
+                        EventHandler.Instance.HandleInvoke(EventCode.ShowDependencies, child);
                     }
                 }
             }
