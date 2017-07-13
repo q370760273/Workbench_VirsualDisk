@@ -13,6 +13,8 @@ public class HelpInformation
             return "";
 
         StreamReader reader = new StreamReader(HELP_FILE_PATH);
-        return reader.ReadToEnd();
+        string result = reader.ReadToEnd();
+        reader.Close();
+        return result;
     }
 }
